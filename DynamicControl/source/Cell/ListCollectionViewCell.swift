@@ -9,6 +9,7 @@ import UIKit
 
 class ListCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var titleLbl: UILabel!
+    @IBOutlet weak var dataLbl: UILabel!
     @IBOutlet weak var iconImg: UIImageView!
     @IBOutlet weak var subTitleLbl: UILabel!
 }
