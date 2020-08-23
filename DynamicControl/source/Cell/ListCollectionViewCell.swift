@@ -1,6 +1,6 @@
 //
 //  ListCollectionViewCell.swift
-//  Alamofire
+//  DynamicControl
 //
 //  Created by Heba Nageh on 03/01/1442 AH.
 //

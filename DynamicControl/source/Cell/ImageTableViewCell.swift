@@ -1,6 +1,6 @@
 //
 //  ImageTableViewCell.swift
-//  Alamofire
+//  DynamicControl
 //
 //  Created by Heba Nageh on 03/01/1442 AH.
 //
@@ -9,7 +9,7 @@ import UIKit
 
 class ImageTableViewCell: UITableViewCell {
 
-    @IBOutlet weak var image: UIImageView!
+    @IBOutlet weak var docImage: UIImageView!
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
