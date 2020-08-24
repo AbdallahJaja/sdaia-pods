@@ -1,5 +1,5 @@
 //
-//  MenuViewController.swift
+//  PanelViewController.swift
 //  DynamicControl
 //
 //  Created by Heba Nageh on 03/01/1442 AH.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MenuViewController: UIViewController {
+class PanelViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
 
@@ -21,7 +21,7 @@ class MenuViewController: UIViewController {
     }
 }
 
-extension MenuViewController : UICollectionViewDelegate , UICollectionViewDataSource {
+extension PanelViewController : UICollectionViewDelegate , UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return mainList?.list?.count ?? 0
     }
@@ -39,7 +39,7 @@ extension MenuViewController : UICollectionViewDelegate , UICollectionViewDataSo
     }
 }
 
-extension MenuViewController {
+extension PanelViewController {
     
     func loadNextView(index : Int) {
         if let nextList = mainList?.next(index: index) {
