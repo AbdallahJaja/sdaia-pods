@@ -16,12 +16,12 @@ struct  InfoList {
 }
 struct DataList {
     var title : String?
-    var values : [Data]?
-    func getValues() -> [Data]?{
+    var values : [DataValue]?
+    func getValues() -> [DataValue]?{
         return self.values
     }
 }
-struct Data {
+struct DataValue {
     var key: String?
     var image : UIImage?
     var value: String?    
@@ -29,18 +29,18 @@ struct Data {
 
 // Menu of categories
 struct MainList {
-    var list : [List]?
+    var list : [SubList]?
     
-    func next(index : Int) -> [List] {
+    func next(index : Int) -> [SubList] {
         return self.list?[index].subList ?? []
     }
 }
-struct List {
+struct SubList {
     
     var title: String?
     var image: UIImage?
     var subTitle : String?
-    var subList : [List]?
+    var subList : [SubList]?
     
     func isEmptySub() -> Bool {
         return subList?.count == 0 ? true : false

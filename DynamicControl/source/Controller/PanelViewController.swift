@@ -12,7 +12,7 @@ class PanelViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
 
     var mainList : MainList?
-    var subList : List?
+    var subList : SubList?
     
     override func viewDidLoad() {
         super.viewDidLoad()
