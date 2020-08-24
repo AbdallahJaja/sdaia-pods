@@ -52,24 +52,25 @@ public extension UITableViewCell {
         return cell
     }
   
-  class func subTitleCell(with image: UIImage?, title: String?, subtitle: String?) -> UITableViewCell {
-        let cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: nil)
-        cell.textLabel?.numberOfLines = 0
-        cell.detailTextLabel?.numberOfLines = 0
-        cell.textLabel?.font = UIFont.km_body
-        cell.detailTextLabel?.font = UIFont.km_footnote
-        cell.detailTextLabel?.textColor = Theme.secondaryForegroundColor
+  class func subTitleCell(with image: UIImage?, title: String?, subtitle: String? , bgColorFlag :Bool = true) -> UITableViewCell {
+      let cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: nil)
+      cell.textLabel?.numberOfLines = 0
+      cell.detailTextLabel?.numberOfLines = 0
+      cell.textLabel?.font = UIFont.km_body
+      cell.detailTextLabel?.font = UIFont.km_footnote
+      cell.detailTextLabel?.textColor = Theme.secondaryForegroundColor
 
-        cell.imageView?.image = image?.addImagePadding(x: 10, y: 10)
-        cell.imageView?.layer.cornerRadius = 4
-         cell.imageView?.backgroundColor = .co_sea
-        cell.imageView?.clipsToBounds = true
-        cell.textLabel?.text = title
-        cell.detailTextLabel?.text = subtitle
-        cell.accessoryType = .disclosureIndicator
-        return cell
+      cell.imageView?.image = bgColorFlag ? image?.addImagePadding(x: 10, y: 10) : image
+      cell.imageView?.layer.cornerRadius = 4
+      cell.imageView?.backgroundColor = bgColorFlag ? .co_sea : .clear
 
-    }
+      cell.imageView?.clipsToBounds = true
+      cell.textLabel?.text = title
+      cell.detailTextLabel?.text = subtitle
+      cell.accessoryType = .disclosureIndicator
+      return cell
+
+  }
 
     class func cellForNotification(with image: UIImage?, title: String?, subtitle: String? , count: Int?) -> UITableViewCell {
 
@@ -115,6 +116,27 @@ public extension UITableViewCell {
            cell.backgroundColor = .white
            return cell
        }
+    
+    class func customSubTitleCell(with image: UIImage?, title: String?, subtitle: String? , accessoryImage : UIImage? ) -> UITableViewCell {
+          let cell = UITableViewCell.init(style: .subtitle, reuseIdentifier: nil)
+          cell.textLabel?.numberOfLines = 0
+          cell.detailTextLabel?.numberOfLines = 0
+          cell.textLabel?.font = UIFont.km_body
+          cell.detailTextLabel?.font = UIFont.km_footnote
+          cell.detailTextLabel?.textColor = Theme.secondaryForegroundColor
+          cell.imageView?.image = image
+          cell.imageView?.layer.cornerRadius = 4
+          cell.imageView?.clipsToBounds = true
+          cell.textLabel?.text = title
+          cell.detailTextLabel?.text = subtitle
+          let imgView = UIImageView(frame: CGRect(x: 0, y: 0, width: 12, height: 8))
+          imgView.image = accessoryImage?.imageWithColor(.gray)
+          imgView.clipsToBounds = true
+          cell.accessoryView = imgView
+          cell.selectionStyle = .none
+          return cell
+
+      }
     
     fileprivate class func isAppArabic() -> Bool {
         let isAppArabic = Locale.current.languageCode?.lowercased().hasPrefix("ar") ?? false

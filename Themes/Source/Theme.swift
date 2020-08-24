@@ -252,4 +252,19 @@ public extension UIColor {
        return UIColor(hex: "#ff4040")
      }
     
+    @nonobjc class var co_light_blue: UIColor {
+         return UIColor(hex: "#1B9EE3")
+       }
+    @nonobjc class var co_defect: UIColor {
+         return UIColor(hex: "#EDD4D4")
+       }
+    @nonobjc class var co_positive: UIColor {
+         return UIColor(hex: "#F3DDA6")
+       }
+    @nonobjc class var co_negative: UIColor {
+         return UIColor(hex: "#E9F2F1")
+       }
+    @nonobjc class var co_light_gray: UIColor {
+      return UIColor(hex: "#161d24")
+    }
 }
