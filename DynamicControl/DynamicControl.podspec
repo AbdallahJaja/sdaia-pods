@@ -13,6 +13,7 @@ s.requires_arc          = true
 s.resources             = "Source/**/*.storyboard" , "Source/**/*.xcassets" 
 s.source_files          = "Source/**/*.{swift}"
 s.version               = "0.0.1"
+s.ios.resource_bundle   = { 'DynamicControl' => 'Resources/*.xcassets' }
 
 s.framework = "UIKit"
 s.dependency 'Extensions'

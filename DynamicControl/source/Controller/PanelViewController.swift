@@ -40,11 +40,8 @@ class PanelViewController: UIViewController {
         //hide loading
         progress.dismiss()
         if currentMainList?.list?.count == 0 {
-
-            setEmptyDataImage()
-            
+            setEmptyListImage()
         } else {
-            //TODO
             collectionView.reloadData()
         }
         if let title = currentMainTitle {
@@ -56,7 +53,7 @@ class PanelViewController: UIViewController {
     }
     
     public func reloadCell(at index: Int) {
-        
+
         collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
     }
 }
@@ -123,14 +120,7 @@ extension PanelViewController {
 
 extension PanelViewController {
 
-    func setEmptyDataImage() {
-        let noDataImageV: UIImageView  = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
-        noDataImageV.clipsToBounds = true
-        noDataImageV.alpha = 0.3
-        let noDataLbl: UILabel  = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
-        noDataLbl.alpha = 0.3
-        self.collectionView.backgroundView?.addSubview(noDataImageV)
-        self.collectionView.backgroundView?.addSubview(noDataLbl)
+    func setEmptyListImage() {
         
     }
 }

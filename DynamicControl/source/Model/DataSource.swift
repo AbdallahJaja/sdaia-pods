@@ -7,6 +7,15 @@
 
 import Foundation
 
+
+public class DynamicControl {
+    public static var assetBundle: Bundle {
+        get {
+            return Bundle(for: DynamicControl.self)
+        }
+    }
+}
+
 public protocol DataSourceManagerDelegate {
 
     func loadMainList()
@@ -56,6 +65,7 @@ public class DataSourceManager {
             guard currentObject.metaData == nil else { return }
             currentObject.metaData = metadata
             currentListVC?.currentMainList?.list?[currentObjectIndex] = currentObject
+            
             currentListVC?.reloadCell(at: currentObjectIndex)
         }
     }
