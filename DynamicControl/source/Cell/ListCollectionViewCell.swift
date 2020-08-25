@@ -12,4 +12,5 @@ class ListCollectionViewCell: UICollectionViewCell {
     @IBOutlet weak var dataLbl: UILabel!
     @IBOutlet weak var iconImg: UIImageView!
     @IBOutlet weak var subTitleLbl: UILabel!
+
 }

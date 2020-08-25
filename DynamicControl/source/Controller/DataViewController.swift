@@ -10,11 +10,16 @@ import UIKit
 class DataViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
+    
+    public var categoryId: Int?
     public var list : InfoList?
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        DataSourceManager.shared.currentDataVC = self
+        DataSourceManager.shared.delegate?.loadDataList(categoryId ?? 0)
+        self.addCloseButton()
+        self.title = "DATAAAA"
+        
     }
     
     public func reloadData() {

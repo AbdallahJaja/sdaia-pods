@@ -15,4 +15,6 @@ s.source_files          = "Source/**/*.{swift}"
 s.version               = "0.0.1"
 
 s.framework = "UIKit"
+s.dependency 'Extensions'
+s.dependency 'JGProgressHUD'
 end

@@ -48,12 +48,12 @@ public class DataSourceManager {
         currentListVC?.reloadData()
     }
     
-    public func didLoadMetadata(_ metadata: String, _ categoryId: Int) {
+    public func didLoadMetadata(_ metadata: SubList.MetaData, _ categoryId: Int) {
         
         if let currentObjectIndex = currentListVC?.currentMainList?.list?.firstIndex (where: { $0.id == categoryId }) {
             
             guard var currentObject = currentListVC?.currentMainList?.list?[currentObjectIndex] else { return }
-            currentObject.metadata = metadata
+            currentObject.metaData = metadata
             currentListVC?.currentMainList?.list?[currentObjectIndex] = currentObject
             currentListVC?.reloadVisibleCells()
         }
@@ -82,7 +82,12 @@ struct DataValue {
 
 // Menu of categories
 public struct MainList {
-    var list : [SubList]?
+    
+    public init() {
+        
+    }
+    
+    public var list : [SubList]? = nil
     func next(index : Int) -> [SubList] {
         return self.list?[index].subList ?? []
     }
@@ -90,23 +95,34 @@ public struct MainList {
 public struct SubList {
     
     var id: Int?
-    var desc: String?
     var parentId : Int?
     var title: String?
     var image: UIImage?
-    var subTitle : String?
-    var metadata: String?
-    var subList : [SubList]?
+    var metaData : MetaData?
+    public var subList : [SubList]?
     
-    init(id : Int? , decs : String? , parentId : Int? , title : String? , image : String? , subTitle : String? , subList : [SubList]?) {
+    public init(id : Int? , parentId : Int? , title : String? , image : UIImage? , subList : [SubList]?) {
         self.id = id
-        self.desc = desc
         self.parentId = parentId
         self.title = title
-        self.image = image.convertBase64ToImage() ?? UIImage()
+        self.image = image
+        self.subList = subList
     }
+    
     func isEmptySub() -> Bool {
         return subList?.count == 0 ? true : false
+    }
+    
+    public struct MetaData {
+        
+        public init(key: String , value: String) {
+            
+            subTitle = key
+            metadata = value
+        }
+        
+        var subTitle : String?
+        var metadata: String?
     }
 }
 
