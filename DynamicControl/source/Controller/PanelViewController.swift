@@ -9,43 +9,59 @@ import UIKit
 
 class PanelViewController: UIViewController {
 
+    public var currentMainList : MainList?
     @IBOutlet weak var collectionView: UICollectionView!
-
-    var mainList : MainList?
-    var subList : SubList?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         self.title = NSLocalizedString("dashboard", comment: "")
         // Do any additional setup after loading the view.
     }
+    
+    public func reloadData() {
+        if currentMainList?.list?.count == 0 {
+            
+            //TODO
+            // shoe empty view
+            
+        } else {
+            collectionView.reloadData()
+        }
+    }
+    
+    public func reloadVisibleCells() {
+        
+        let visibleIndecis = collectionView.indexPathsForVisibleItems
+        collectionView.reloadItems(at: visibleIndecis)
+    }
 }
 
 extension PanelViewController : UICollectionViewDelegate , UICollectionViewDataSource {
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return mainList?.list?.count ?? 0
+        return currentMainList?.list?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ListCollectionViewCell", for: indexPath) as! ListCollectionViewCell
-        cell.titleLbl.text = mainList?.list?[indexPath.row].title
-        cell.iconImg.image = mainList?.list?[indexPath.row].image
-        cell.subTitleLbl.text = mainList?.list?[indexPath.row].subTitle
+        let obj = currentMainList?.list?[indexPath.row]
+        cell.titleLbl.text = obj?.title
+        cell.iconImg.image = obj?.image
+        cell.subTitleLbl.text = obj?.subTitle
         return cell
     }
     
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-            loadNextView(index:  indexPath.row)
+        loadNextView(index:  indexPath.row)
     }
 }
 
 extension PanelViewController {
     
     func loadNextView(index : Int) {
-        if let nextList = mainList?.next(index: index) {
+        if let nextList = currentMainList?.next(index: index) {
             if nextList.count > 0 {
                 let vc = PanelViewController()
-                vc.mainList?.list = nextList
+                vc.currentMainList?.list = nextList
                 self.navigationController?.pushViewController(vc, animated: true)
             }
         }

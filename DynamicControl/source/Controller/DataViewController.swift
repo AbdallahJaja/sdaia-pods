@@ -10,11 +10,16 @@ import UIKit
 class DataViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
-    var list : InfoList?
+    public var list : InfoList?
     override func viewDidLoad() {
         super.viewDidLoad()
 
         // Do any additional setup after loading the view.
+    }
+    
+    public func reloadData() {
+     
+        tableView.reloadData()
     }
 }
 extension DataViewController : UITableViewDelegate , UITableViewDataSource {
