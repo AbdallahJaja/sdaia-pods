@@ -129,9 +129,9 @@ func loadDataView(for object: SubList) {
     }
 }
 
+
 extension PanelViewController {
     func setEmptyDataImage() {
-
         let noDataImageV: UIImageView  = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
         noDataImageV.clipsToBounds = true
         noDataImageV.alpha = 0.3
@@ -142,4 +142,3 @@ extension PanelViewController {
         
     }
 }
-

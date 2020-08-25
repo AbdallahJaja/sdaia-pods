@@ -62,22 +62,45 @@ public class DataSourceManager {
 
 //data
 public struct InfoList {
-    var dataList : [DataList]?
+    public init() {
+        
+    }
+    public init(isSingleValue : Bool? , msg : String? , dataList: [DataList]?) {
+        self.isSingleValue = isSingleValue
+        self.msg = msg
+        self.dataList = dataList
+    }
+    var isSingleValue : Bool? = false
+    var msg : String? = ""
+    var dataList : [DataList]? = nil
     func isSingle() -> Bool {
         return dataList?.count == 1 ? true : false
     }
 }
 public struct DataList {
+    public init(title : String? , value : String? , dataValues: [DataValue]?) {
+        self.title = title
+        self.value = value
+        self.dataValues = dataValues
+    }
+    var id: Int?
     var title : String?
-    var values : [DataValue]?
+    var value : String?
+    var dataValues : [DataValue]?
+    
     func getValues() -> [DataValue]?{
-        return self.values
+        return self.dataValues
     }
 }
-struct DataValue {
-    var key: String?
+public struct  DataValue {
+    public init(title : String? , value : String? , image: UIImage?) {
+        self.title = title
+        self.value = value
+        self.image = image
+    }
+    var title: String?
+    var value: String?
     var image : UIImage?
-    var value: String?    
 }
 
 // Menu of categories
@@ -86,7 +109,6 @@ public struct MainList {
     public init() {
         
     }
-    
     public var list : [SubList]? = nil
     func next(index : Int) -> [SubList] {
         return self.list?[index].subList ?? []
@@ -116,7 +138,6 @@ public struct SubList {
     public struct MetaData {
         
         public init(key: String , value: String) {
-            
             subTitle = key
             metadata = value
         }

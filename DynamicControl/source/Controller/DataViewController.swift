@@ -6,6 +6,8 @@
 //
 
 import UIKit
+import JGProgressHUD
+import Extensions
 
 class DataViewController: UIViewController {
 
@@ -15,16 +17,26 @@ class DataViewController: UIViewController {
     public var currentTitle : String?
     public var list : InfoList?
     
+    var progress = JGProgressHUD.init()
     override func viewDidLoad() {
         super.viewDidLoad()
         DataSourceManager.shared.currentDataVC = self
         DataSourceManager.shared.delegate?.loadDataList(categoryId ?? 0)
+        
+        self.title = currentTitle
         self.addCloseButton()
         
     }
+    override func viewWillAppear(_ animated: Bool) {
+
+        //show loading
+        progress.show(in: view)
+        DataSourceManager.shared.delegate?.loadDataList(self.categoryId ?? 0)
+        reloadData()
+    }
     
     public func reloadData() {
-     
+        progress.dismiss()
         tableView.reloadData()
     }
 }
@@ -44,3 +56,19 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
     }
         
 }
+
+
+extension DataViewController {
+    func setEmptyDataImage() {
+
+        let noDataImageV: UIImageView  = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
+        noDataImageV.clipsToBounds = true
+        noDataImageV.alpha = 0.3
+        let noDataLbl: UILabel  = UILabel(frame: CGRect(x: 0, y: 0, width: 100, height: 32))
+        noDataLbl.alpha = 0.3
+        self.tableView.backgroundView?.addSubview(noDataImageV)
+        self.tableView.backgroundView?.addSubview(noDataLbl)
+        
+    }
+}
+
