@@ -53,9 +53,10 @@ public class DataSourceManager {
         if let currentObjectIndex = currentListVC?.currentMainList?.list?.firstIndex (where: { $0.id == categoryId }) {
             
             guard var currentObject = currentListVC?.currentMainList?.list?[currentObjectIndex] else { return }
+            guard currentObject.metaData == nil else { return }
             currentObject.metaData = metadata
             currentListVC?.currentMainList?.list?[currentObjectIndex] = currentObject
-            currentListVC?.reloadVisibleCells()
+            currentListVC?.reloadCell(at: currentObjectIndex)
         }
     }
 }
