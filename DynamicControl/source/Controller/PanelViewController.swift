@@ -24,7 +24,7 @@ class PanelViewController: UIViewController {
     }
     
     override func viewWillAppear(_ animated: Bool) {
-    
+
         if currentMainList == nil {
             
             //show loading
@@ -36,7 +36,7 @@ class PanelViewController: UIViewController {
     }
     
     public func reloadData() {
-       
+
         //hide loading
         progress.dismiss()
         if currentMainList?.list?.count == 0 {
@@ -55,39 +55,30 @@ class PanelViewController: UIViewController {
         }
     }
     
-    public func reloadVisibleCells() {
+    public func reloadCell(at index: Int) {
         
-        let visibleIndecis = collectionView.indexPathsForVisibleItems
-        collectionView.reloadItems(at: visibleIndecis)
+        collectionView.reloadItems(at: [IndexPath(item: index, section: 0)])
     }
 }
 
 extension PanelViewController : UICollectionViewDelegate , UICollectionViewDataSource , UICollectionViewDelegateFlowLayout {
+
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+
         return currentMainList?.list?.count ?? 0
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ListCollectionViewCell", for: indexPath) as! ListCollectionViewCell
         let obj = currentMainList?.list?[indexPath.row]
-        cell.titleLbl.text = obj?.title
-        cell.iconImg.image = obj?.image?.imageWithColor(.co_sea)
-        cell.subTitleLbl.text = obj?.metaData?.subTitle
-        if obj?.metaData?.metadata == nil {
-            
-            DataSourceManager.shared.delegate?.loadMetadata(obj?.id ?? 0)
-        } else {
-            cell.dataLbl.text = obj?.metaData?.metadata
-        }
-        
-        cell.contentView.layer.borderColor = UIColor.gray.cgColor
-        cell.contentView.layer.borderWidth = 0.5
-        cell.contentView.layer.cornerRadius = 10
+        cell.configureCell(with: obj)
 
         return cell
     }
 
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+
         guard let object = currentMainList?.list![indexPath.row] else { return }
         if object.subList?.count == 0 {
             loadDataView(for: object)
@@ -97,9 +88,9 @@ extension PanelViewController : UICollectionViewDelegate , UICollectionViewDataS
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-         return CGSize(width: 177, height: 190.0)
-    }
 
+        return CGSize(width: 177, height: 190.0)
+    }
 }
 
 extension PanelViewController {
@@ -119,7 +110,7 @@ extension PanelViewController {
         }
     }
     
-func loadDataView(for object: SubList) {
+    func loadDataView(for object: SubList) {
 
         let storyboard = UIStoryboard(name: "DynamicControl", bundle: Bundle(identifier: "org.cocoapods.DynamicControl"))
         let vc: DataViewController = storyboard.instantiateViewController(withIdentifier: "DataViewController") as! DataViewController
@@ -130,6 +121,7 @@ func loadDataView(for object: SubList) {
 }
 
 extension PanelViewController {
+
     func setEmptyDataImage() {
 
         let noDataImageV: UIImageView  = UIImageView(frame: CGRect(x: 0, y: 0, width: 50, height: 50))
