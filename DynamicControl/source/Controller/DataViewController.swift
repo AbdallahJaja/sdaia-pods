@@ -12,13 +12,14 @@ class DataViewController: UIViewController {
     @IBOutlet weak var tableView: UITableView!
     
     public var categoryId: Int?
+    public var currentTitle : String?
     public var list : InfoList?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         DataSourceManager.shared.currentDataVC = self
         DataSourceManager.shared.delegate?.loadDataList(categoryId ?? 0)
         self.addCloseButton()
-        self.title = "DATAAAA"
         
     }
     

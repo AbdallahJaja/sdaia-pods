@@ -124,6 +124,7 @@ func loadDataView(for object: SubList) {
         let storyboard = UIStoryboard(name: "DynamicControl", bundle: Bundle(identifier: "org.cocoapods.DynamicControl"))
         let vc: DataViewController = storyboard.instantiateViewController(withIdentifier: "DataViewController") as! DataViewController
         vc.categoryId = object.id
+        vc.currentTitle = object.title
         self.navigationController?.pushViewController(vc, animated: true)
     }
 }
