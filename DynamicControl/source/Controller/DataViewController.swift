@@ -50,7 +50,7 @@ class DataViewController: UIViewController {
             setEmptyDataImage()
         } else {
             tableView.backgroundView = nil
-            if list?.isSingleValue ?? false {
+            if let isSingle = list?.isSingle() , isSingle == true {
                 expandFlagArr.append(true)
             }
             else if let currentList = list?.dataList {
@@ -96,7 +96,7 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
         if indexPath.row == 0{
                 let cell = tableView.dequeueReusableCell(withIdentifier: "DataTitleTableViewCell", for: indexPath) as! DataTitleTableViewCell
          
-                if list?.isSingleValue ?? false {
+            if let isSingle = list?.isSingle() , isSingle == true {
                     cell.titleLbl.text = currentTitle
                     cell.titleLbl.textColor = .co_sea
                     cell.dataLbl.isHidden = true
@@ -147,7 +147,7 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
          if indexPath.row == 0{
-            if let isSingle = list?.isSingleValue , isSingle == false {
+            if let isSingle = list?.isSingle() , isSingle == false {
                 expandResultDetails(index: indexPath.section)
             }
          }
@@ -193,7 +193,6 @@ func expandResultDetails(index : Int) {
         for dataValue in dataValues {
             cell.addDataView(key: dataValue.title , value: dataValue.value )
        }
-        tableView.reloadRows(at: [index], with: .none)
     }
     
     func isImageExist(index : Int) -> Bool {

@@ -86,7 +86,7 @@ extension PanelViewController : UICollectionViewDelegate , UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        return CGSize(width: 177, height: 190.0)
+        return CGSize(width: 160, height: 190.0)
     }
 }
 
