@@ -39,6 +39,12 @@ class DataTableViewCell: UITableViewCell {
         dataStackView.spacing = 20
         dataStackView.distribution = .fillEqually
         self.stackView.addArrangedSubview(dataStackView)
+        
+//        let separatorLabel = UILabel(frame: CGRect(x: 0, y: 0, width : self.bounds.size.width, height : 2))
+//        separatorLabel.backgroundColor = .red
+//        self.stackView.addArrangedSubview(separatorLabel)
+        
+        self.stackView.clipsToBounds = true
     }
     func clearStackView(){
         stackView.removeAllArrangedSubviews()
