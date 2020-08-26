@@ -28,18 +28,19 @@ class DataViewController: UIViewController {
     
         DataSourceManager.shared.currentDataVC = self
         
-        self.title = currentTitle
-        self.addCloseButton()
+        title = currentTitle
+        addCloseButton()
      
     }
     override func viewWillAppear(_ animated: Bool) {
 
         //show loading
         tableView.backgroundView = nil
-        self.list?.dataList = []
-        self.list = nil
+        list?.dataList = []
+        list = nil
+        expandFlagArr = []
         progress.show(in: view)
-          DataSourceManager.shared.delegate?.loadDataList(self.categoryId ?? 0)
+          DataSourceManager.shared.delegate?.loadDataList(categoryId ?? 0)
           reloadData()
     }
     
@@ -52,9 +53,9 @@ class DataViewController: UIViewController {
             if list?.isSingleValue ?? false {
                 expandFlagArr.append(true)
             }
-            else if let currentList = self.list?.dataList {
+            else if let currentList = list?.dataList {
                 for _ in currentList {
-                    self.expandFlagArr.append(false)
+                    expandFlagArr.append(false)
                 }
             }
 
@@ -146,7 +147,7 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
          if indexPath.row == 0{
-            if let isSingle = self.list?.isSingleValue , isSingle == false {
+            if let isSingle = list?.isSingleValue , isSingle == false {
                 expandResultDetails(index: indexPath.section)
             }
          }
@@ -156,20 +157,20 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
 extension DataViewController {
     func setEmptyDataImage() {
 
-        let view = UIView(frame: CGRect(x: 0, y: 0, width : self.tableView.bounds.size.width, height : self.tableView.bounds.size.height))
+        let view = UIView(frame: CGRect(x: 0, y: 0, width : tableView.bounds.size.width, height : tableView.bounds.size.height))
         tableView.separatorStyle = .none
-        let noDataImageV: UIImageView  = UIImageView(frame: CGRect(x: self.tableView.bounds.size.width/2-25, y: self.tableView.bounds.size.height/2-50, width : 50, height : 50))
+        let noDataImageV: UIImageView  = UIImageView(frame: CGRect(x: tableView.bounds.size.width/2-25, y: tableView.bounds.size.height/2-50, width : 50, height : 50))
         noDataImageV.clipsToBounds = true
         noDataImageV.alpha = 0.3
         noDataImageV.image = UIImage(named: "emptystate",in: DynamicControl.assetBundle, compatibleWith: nil)
-        let noDataLbl: UILabel  = UILabel(frame: CGRect(x: 0, y: self.tableView.bounds.size.height/2, width : self.tableView.bounds.size.width , height : 32))
+        let noDataLbl: UILabel  = UILabel(frame: CGRect(x: 0, y: tableView.bounds.size.height/2, width : tableView.bounds.size.width , height : 32))
         noDataLbl.alpha = 0.3
         noDataLbl.text = list?.msg
         noDataLbl.textAlignment = .center
 
         view.addSubview(noDataImageV)
         view.addSubview(noDataLbl)
-        self.tableView.backgroundView = view
+        tableView.backgroundView = view
         
     }
 }
@@ -202,7 +203,7 @@ func expandResultDetails(index : Int) {
                     return false
                 }
                 else {
-                    self.docImg = dataValue.image
+                    docImg = dataValue.image
                     return true
                 }
             }
