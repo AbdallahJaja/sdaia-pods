@@ -21,7 +21,6 @@ class ListCollectionViewCell: UICollectionViewCell {
     func configureCell(with obj: SubList?) {
 
         titleLbl.textColor = .co_sea
-        arrowImage.image = UIImage(named: "backIcon")?.imageWithColor(.co_sea)
         titleLbl.text = obj?.title
         iconImg.image = obj?.image?.imageWithColor(.co_sea)
 
