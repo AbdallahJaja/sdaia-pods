@@ -9,6 +9,7 @@ import Alamofire
 import PromiseKit
 import Foundation
 import FakeLocationDetector
+import Ensuring
 
 internal extension WebAPI.Path {
 
@@ -112,7 +113,7 @@ internal extension WebAPI.Path {
     static let changeNonAbsherUserMobileNumber = WebAPI.Path(URL: "/api/core/user/protected/changemobilenumberfornonabsher", method: .post, title: "changeNonAbsherUserMobileNumber")
     static let verifyChangeNonAbsherUserMobileNumberOTP = WebAPI.Path(URL: "/api/core/user/protected/updatemobilenumberfornonabsher", method: .post, title: "verifyChangeNonAbsherUserMobileNumberOTP")
 
-      //MARK:- Manual Check In
+    //MARK:- Manual Check In
     static let manualCheckIn = WebAPI.Path(URL: "/api/gatheringpermission/reversecheckin", method: .post, title: "manualCheckIn")
     static let validateGatheringVistor = WebAPI.Path(URL: "/api/gatheringpermission/validatebyidanddob", method: .post, title: "validateGatheringVistor")
 
@@ -135,19 +136,20 @@ internal extension WebAPI.Path {
 public class RequestSender {
 
     #if DEBUG
-        static let baseURL = "https://api.foodics.dev/v5"
-        static let authURL = "https://api.foodics.dev/oauth/token/device"
+    static let baseURL = "https://api.foodics.dev/v5"
+    static let authURL = "https://api.foodics.dev/oauth/token/device"
     #elseif Release
-        static let baseURL = "https://api-sandbox.foodics.com/v5"
-        static let authURL = "https://api-sandbox.foodics.com/oauth/token/device"
+    static let baseURL = "https://api-sandbox.foodics.com/v5"
+    static let authURL = "https://api-sandbox.foodics.com/oauth/token/device"
     #elseif Obf_Release
-        static let baseURL = "https://api.foodics.com/v5"
-        static let authURL = "https://api.foodics.com/oauth/token/device"
+    static let baseURL = "https://api.foodics.com/v5"
+    static let authURL = "https://api.foodics.com/oauth/token/device"
     #endif
 
-    public static var clientId = ""
-    public static var clientSecret = ""
+    public static var token: String? = ""
+    public static var tokenType: String? = ""
 
+    fileprivate static let ensureAppController = EnsureAppController()
     fileprivate static let webAPI: WebAPI = {
 
         let configuration = URLSessionConfiguration.default
@@ -167,7 +169,7 @@ public class RequestSender {
 
     public static var deactivateAction: (() -> ())?
 
-//********************************************************************************
+    //********************************************************************************
 
     fileprivate static func policies() -> WebAPI.ServerTrustPolicies {
 
@@ -189,126 +191,114 @@ public class RequestSender {
         let crtBase64 = "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".trimmingCharacters(in: .whitespacesAndNewlines)
         let host = "snf3.nic.gov.sa"
 
-//        let pinnedCert = MoyaProvider<MultiTarget>.pinnedCertificates(certBase64: crtBase64, acceptSelfSignedCertificates: true, performDefaultValidation: true, validateHost: true)
-//        let manager = ServerTrustManager(evaluators: [host: pinnedCert])
+        let pinnedCert = MoyaProvider<MultiTarget>.pinnedCertificates(certBase64: crtBase64, acceptSelfSignedCertificates: true, performDefaultValidation: true, validateHost: true)
+        let manager = ServerTrustManager(evaluators: [host: pinnedCert])
         let sessionDelegate = CustomSessionDelegate()
-//        sessionDelegate.crtBase64 = crtBase64
+        sessionDelegate.crtBase64 = crtBase64
 
         return Alamofire.Session(configuration: .default, delegate: sessionDelegate, rootQueue: .main, startRequestsImmediately: true, requestQueue: nil, serializationQueue: nil, interceptor: nil, serverTrustManager: manager, redirectHandler: nil, cachedResponseHandler: nil, eventMonitors: [])
     }
 
-//********************************************************************************
+    //********************************************************************************
 
     public static func setToken(value: String) {
 
-        webAPI.setRequestHeader("Authorization", value: "Bearer \(value)")
+        self.token = value
     }
 
     public static func unsetToken() {
 
-        webAPI.setRequestHeader("Authorization", value: nil)
+        self.token = nil
     }
 
-    internal static func defaultHeaders(for endPoint: String) -> [String: String]? {
+    internal static func defaultHeaders(for endPoint: String) -> HTTPHeaders {
 
         let langCode = Locale.current.serviceIdentifier
 
-        var headers = [
-            HTTPHeader.defaultUserAgent.name : HTTPHeader.defaultUserAgent.value,
-            HTTPHeader.defaultAcceptEncoding.name: HTTPHeader.defaultAcceptEncoding.value,
-            HTTPHeader.defaultAcceptLanguage.name: HTTPHeader.defaultAcceptLanguage.value,
-            "user-unique-id": UIDevice.current.identifierForVendor?.uuidString ?? "",
-            "user-device-language": langCode,
-        ]
-
+        var headers: HTTPHeaders = []
+        headers.add(HTTPHeader(name: HTTPHeader.defaultUserAgent.name, value: HTTPHeader.defaultUserAgent.value))
+        headers.add(HTTPHeader(name: HTTPHeader.defaultAcceptEncoding.name, value: HTTPHeader.defaultAcceptEncoding.value))
+        headers.add(HTTPHeader(name: HTTPHeader.defaultAcceptLanguage.name, value: Locale.current.serviceIdentifier))
+        headers.add( HTTPHeader(name: "user-unique-id", value: UIDevice.current.identifierForVendor?.uuidString ?? ""))
+        headers.add(HTTPHeader(name: "user-device-language", value: langCode))
         // append `FAKE_LOCATION_STATUS` in header request
         if let status = FakeLocationDetector.shared.fakeLocationStatus {
             //only apply for release mode
 
-            headers = headers.adding(newHTTPHeaderFields: [
-                "advancedGPS": "\(status.rawValue)",
-            ])
+            headers.add(HTTPHeader(name: "advancedGPS", value: "\(status.rawValue)"))
             /** END check **/
         }
 
+        headers.add(HTTPHeader(name: "ibaklvl", value: "\(ensureAppController.score)"))
+        headers.add(HTTPHeader(name: "bak", value: "\(ensureAppController.repak)"))
+
         // append `score`, `repak` in header request
-        headers = headers.adding(newHTTPHeaderFields: [
-            "ibaklvl": "\(AppEnvironment.shared.ensureAppController.score)",
-        ])
-
-        headers = headers.adding(newHTTPHeaderFields: [
-            "bak": AppEnvironment.shared.ensureAppController.repak ? "1" : "0",
-        ])
-
-        headers = headers.adding(newHTTPHeaderFields: [
-            "accept-language": Locale.current.serviceIdentifier
-        ])
-
 
         if endPoint == "AuthTarget" || endPoint == "TimeTarget" {
             return headers
         } else {
-            let cred = AppEnvironment.shared.authController
-            if let oAuth = cred.authToken() {
+            if let token = self.token, let tokenType = self.tokenType {
 
                 // To Retry the Refresh token you can generate random number `let number = Int.random(in: 0 ... 10)`
                 // and check if that number is odd or even and manipulate the token to test refresh token.
                 // I wish if we could have a better way to test this but this the only way I find to check refresh token.
-                headers = headers.adding(newHTTPHeaderFields: [
-                    "Authorization": "\(oAuth.tokenType) \(oAuth.accessToken)",
-                ])
+                headers.add(HTTPHeader(name: "Authorization", value: "\(tokenType) \(token)"))
             }
         }
 
         return headers
     }
 
-//********************************************************************************
+    //********************************************************************************
 
     internal static func send(_ path: WebAPI.Path, payload: WebAPI.RequestPayloadType? = nil,
                               encoding: ParameterEncoding = JSONEncoding.default, baseURL: String = RequestSender.baseURL) -> Promise<Data> {
 
-        let requestHeaders = defaultHeaders(for: path.URL)
+        let requestHeaders = defaultHeaders(for: path.URL).map { ( $0.name, $0.value )}
+        let headers: [String: String]
 
-        var path = path
+        for (key, value) in requestHeaders {
+            headers[key] = value
+        }
+        let path = path
 
         let pathURL = path.URL.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed)!
 
         return firstly {
             webAPI.requestWithMethod(path.method, requestURL: baseURL + pathURL,
-                                                  requestPayload: payload, encoding: encoding, title: path.title, requestHeaders: requestHeaders)
+                                     requestPayload: payload, encoding: encoding, title: path.title, requestHeaders: headers)
         }.then { (result: (Data, Int)) -> Promise<Data> in
             let statusCode = result.1
 
             switch statusCode {
 
-                case 200:
+            case 200:
 
-                    return Promise.value(result.0)
+                return Promise.value(result.0)
 
-                case 401:
+            case 401:
 
-                    let json = try JSONSerialization.jsonObject(with: result.0) as! [String: Any]
+                let json = try JSONSerialization.jsonObject(with: result.0) as! [String: Any]
 
-                    let error = (json["message"] as! String)
+                let error = (json["message"] as! String)
 
-                    if error == "Unauthenticated." {
-                        deactivateAction?()
-                    }
+                if error == "Unauthenticated." {
+                    deactivateAction?()
+                }
 
-                    throw TwkAPIErrors.otherError(error)
+                throw TwkAPIErrors.otherError(error)
 
-                case 404:
+            case 404:
 
-                    throw TwkAPIErrors.notFoundError(errorString(from: result))
+                throw TwkAPIErrors.notFoundError(errorString(from: result))
 
-                case 422:
+            case 422:
 
-                    throw TwkAPIErrors.validationError(errorString(from: result))
+                throw TwkAPIErrors.validationError(errorString(from: result))
 
-                default:
+            default:
 
-                    throw TwkAPIErrors.otherError("Please Try Again Later. Error# \(statusCode)")
+                throw TwkAPIErrors.otherError("Please Try Again Later. Error# \(statusCode)")
 
             }
         }

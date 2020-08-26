@@ -15,11 +15,11 @@ public class FakeLocationDetector : NSObject {
     private let disposeBag : DisposeBag = DisposeBag()
 
     private let validationCount : Int = 30
-    var fakeLocationStatus : FakeLocationType?
+    public var fakeLocationStatus : FakeLocationType?
     var shouldStopUpdating : Bool = false
 
     // Regoular Status or Type`ish
-    enum FakeLocationType : Int {
+    public enum FakeLocationType : Int {
         case realLocation = 0
         case fakeLocation = 1
         //case notSure = "UNCOVERED_CASE"

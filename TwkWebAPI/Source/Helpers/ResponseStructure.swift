@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Constants
 
 //MARK:- Login
 struct LoginResponse: Decodable {
@@ -504,9 +505,9 @@ struct PersonResponse: Decodable {
     func getTranslatedFullName() -> String {
         var name = ""
         if AppUtils.isAppArabic() {
-            name = self.fullName.trimmingChars.isEmpty ? self.fullNameEn : self.fullName
+            name = fullName.trimmingChars.isEmpty ? self.fullNameEn : self.fullName
         }
-        name = self.fullNameEn.trimmingChars.isEmpty ? self.fullName : self.fullNameEn
+        name = fullNameEn.trimmingChars.isEmpty ? self.fullName : self.fullNameEn
         
         return name.trimmingChars.isEmpty ? NSLocalizedString("Name not found", comment: "") : name
     }
