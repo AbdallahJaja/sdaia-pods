@@ -24,20 +24,23 @@ class DataViewController: UIViewController {
         super.viewDidLoad()
         tableView.translatesAutoresizingMaskIntoConstraints = false
         tableView.backgroundColor = .clear
+        tableView.estimatedRowHeight = 100
     
         DataSourceManager.shared.currentDataVC = self
-        DataSourceManager.shared.delegate?.loadDataList(categoryId ?? 0)
         
         self.title = currentTitle
         self.addCloseButton()
-        
+     
     }
     override func viewWillAppear(_ animated: Bool) {
 
         //show loading
+        tableView.backgroundView = nil
+        self.list?.dataList = []
+        self.list = nil
         progress.show(in: view)
-        DataSourceManager.shared.delegate?.loadDataList(self.categoryId ?? 0)
-        reloadData()
+          DataSourceManager.shared.delegate?.loadDataList(self.categoryId ?? 0)
+          reloadData()
     }
     
     public func reloadData() {
@@ -45,7 +48,7 @@ class DataViewController: UIViewController {
         if list?.dataList?.count == 0 {
             setEmptyDataImage()
         } else {
-            tableView.backgroundView = UIView()
+            tableView.backgroundView = nil
             if list?.isSingleValue ?? false {
                 expandFlagArr.append(true)
             }
@@ -84,7 +87,7 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
             }
         }
         else if indexPath.row == 2{
-            return expandFlagArr[indexPath.section] ? 200 : 0
+            return expandFlagArr[indexPath.section] ? UITableView.automaticDimension : 0
         }
         return UITableView.automaticDimension
     }
@@ -131,7 +134,7 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
             if expandFlagArr[indexPath.section] {
                let cell = tableView.dequeueReusableCell(withIdentifier: "DataTableViewCell", for: indexPath) as! DataTableViewCell
                 if let dataValues = list?.dataList?[indexPath.section].dataValues {
-                    loadDataStackView(dataValues: dataValues, cell: cell)
+                    loadDataStackView(dataValues: dataValues, cell: cell , index : indexPath)
                 }
                 cell.selectionStyle = .none
                 cell.clipsToBounds = true
@@ -143,7 +146,9 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
          if indexPath.row == 0{
-            expandResultDetails(index: indexPath.section)
+            if let isSingle = self.list?.isSingleValue , isSingle == false {
+                expandResultDetails(index: indexPath.section)
+            }
          }
     }
 }
@@ -182,11 +187,12 @@ func expandResultDetails(index : Int) {
     tableView.reloadData()
     }
     
-    func loadDataStackView(dataValues : [DataValue], cell : DataTableViewCell) {
+    func loadDataStackView(dataValues : [DataValue], cell : DataTableViewCell , index : IndexPath) {
         cell.clearStackView()
         for dataValue in dataValues {
             cell.addDataView(key: dataValue.title , value: dataValue.value )
        }
+        tableView.reloadRows(at: [index], with: .none)
     }
     
     func isImageExist(index : Int) -> Bool {
