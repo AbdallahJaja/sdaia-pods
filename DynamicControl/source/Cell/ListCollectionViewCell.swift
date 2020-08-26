@@ -9,6 +9,7 @@ import UIKit
 import Themes
 
 class ListCollectionViewCell: UICollectionViewCell {
+    @IBOutlet weak var arrowImage: UIImageView!
     @IBOutlet weak var titleLbl: UILabel!
     @IBOutlet weak var dataLbl: UILabel!
     @IBOutlet weak var iconImg: UIImageView!
@@ -20,7 +21,6 @@ class ListCollectionViewCell: UICollectionViewCell {
     func configureCell(with obj: SubList?) {
 
         titleLbl.textColor = .co_sea
-        
         titleLbl.text = obj?.title
         iconImg.image = obj?.image?.imageWithColor(.co_sea)
 

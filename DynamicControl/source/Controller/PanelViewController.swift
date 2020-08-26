@@ -70,7 +70,8 @@ extension PanelViewController : UICollectionViewDelegate , UICollectionViewDataS
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ListCollectionViewCell", for: indexPath) as! ListCollectionViewCell
         let obj = currentMainList?.list?[indexPath.row]
         cell.configureCell(with: obj)
-
+        
+        cell.arrowImage.image = UIImage(named: "backIcon")?.imageWithColor(.co_sea)
         return cell
     }
 
@@ -86,7 +87,7 @@ extension PanelViewController : UICollectionViewDelegate , UICollectionViewDataS
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
 
-        return CGSize(width: 177, height: 190.0)
+        return CGSize(width: 160, height: 190.0)
     }
 }
 
