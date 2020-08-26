@@ -70,8 +70,14 @@ extension PanelViewController : UICollectionViewDelegate , UICollectionViewDataS
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "ListCollectionViewCell", for: indexPath) as! ListCollectionViewCell
         let obj = currentMainList?.list?[indexPath.row]
         cell.configureCell(with: obj)
-        
-        cell.arrowImage.image = UIImage(named: "backIcon")?.imageWithColor(.co_sea)
+
+        cell.arrowImage.image = UIImage(named: "arrow")?.imageWithColor(.co_sea)
+        if UIApplication.shared.userInterfaceLayoutDirection == .leftToRight {
+            cell.arrowImage.transform = CGAffineTransform.identity.rotated(by: CGFloat(Double.pi / -1))
+        } else {
+            cell.arrowImage.transform = CGAffineTransform.identity.rotated(by: CGFloat(Double.pi / 1))
+        }
+
         return cell
     }
 
