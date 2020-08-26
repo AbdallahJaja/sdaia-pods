@@ -256,7 +256,7 @@ public extension UIColor {
          return UIColor(hex: "#1B9EE3")
        }
     @nonobjc class var co_defect: UIColor {
-         return UIColor(hex: "#EDD4D4")
+         return UIColor(hex: "#DEEAF8")
        }
     @nonobjc class var co_positive: UIColor {
          return UIColor(hex: "#F3DDA6")

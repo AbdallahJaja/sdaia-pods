@@ -17,7 +17,7 @@ public enum ConstraintsAnchors {
     case sidesVertical(_ constant: CGFloat)
     case sidesHorizontal(_ constant: CGFloat)
     case all(_ constant: CGFloat)
-    
+
     case height(_ constant: CGFloat)
     case width(_ constant: CGFloat)
 
@@ -26,13 +26,13 @@ public enum ConstraintsAnchors {
     case center
 }
 
-public extension UIView {
-    
-    func setConstrint(_ anchors: [ConstraintsAnchors]){
+extension UIView {
+
+    public func setConstrint(_ anchors: [ConstraintsAnchors]){
         guard let superView = self.superview else{
             return
         }
-        
+
         self.translatesAutoresizingMaskIntoConstraints = false
 
         for item in anchors {
@@ -56,7 +56,7 @@ public extension UIView {
                 superView.bottomAnchor.constraint(equalTo: self.bottomAnchor, constant: constant).isActive = true
                 self.leadingAnchor.constraint(equalTo: superView.leadingAnchor, constant: constant).isActive = true
                 superView.trailingAnchor.constraint(equalTo: self.trailingAnchor, constant: constant).isActive = true
-                
+
             case .height(let constant):
                 self.heightAnchor.constraint(equalToConstant: constant).isActive = true
             case .width(let constant):
@@ -70,25 +70,25 @@ public extension UIView {
                 self.centerXAnchor.constraint(equalTo: superView.centerXAnchor).isActive = true
             }
         }
-        
+
     }
 
 }
 
-public extension UIView {
-    
-    func setCornerRadius(_ radius : CGFloat) {
+extension UIView {
+
+    public func setCornerRadius(_ radius : CGFloat) {
         self.layer.cornerRadius = radius
         self.clipsToBounds = true
     }
-    
-    func setBorder(_ color: UIColor, width: CGFloat) {
+
+    public func setBorder(_ color: UIColor, width: CGFloat) {
         self.layer.borderWidth = width
         self.layer.borderColor = color.cgColor
     }
 
-    func setRoundedCorners(_ corners: UIRectCorner, radius: CGFloat, viewWidth: CGFloat){
-     
+    public func setRoundedCorners(_ corners: UIRectCorner, radius: CGFloat, viewWidth: CGFloat){
+
         var frame = self.bounds
         frame.size.width = viewWidth
 
@@ -97,4 +97,147 @@ public extension UIView {
         mask.path = path.cgPath
         layer.mask = mask
     }
+}
+
+extension UIView {
+
+    /// SwifterSwift: Border color of view; also inspectable from Storyboard.
+    @IBInspectable public var viewBorderColor: UIColor? {
+        get {
+            guard let color = layer.borderColor else { return nil }
+            return UIColor(cgColor: color)
+        }
+        set {
+            guard let color = newValue else {
+                layer.borderColor = nil
+                return
+            }
+            // Fix React-Native conflict issue
+            guard String(describing: type(of: color)) != "__NSCFType" else { return }
+            layer.borderColor = color.cgColor
+        }
+    }
+
+    /// SwifterSwift: Border width of view; also inspectable from Storyboard.
+    @IBInspectable public var viewBorderWidth: CGFloat {
+        get {
+            return layer.borderWidth
+        }
+        set {
+            layer.borderWidth = newValue
+        }
+    }
+
+    /// SwifterSwift: Corner radius of view; also inspectable from Storyboard.
+    @IBInspectable public var viewCornerRadius: CGFloat {
+        get {
+            return layer.cornerRadius
+        }
+        set {
+            if UIDevice.current.userInterfaceIdiom == .phone {
+                layer.masksToBounds = true
+                layer.cornerRadius = abs(CGFloat(Int(newValue * 100)) / 100)
+            }
+
+        }
+    }
+    @IBInspectable public var viewCornerRadiusIPad: CGFloat {
+        get {
+            return layer.cornerRadius
+        }
+        set {
+            if UIDevice.current.userInterfaceIdiom == .pad {
+              layer.masksToBounds = true
+              layer.cornerRadius = abs(CGFloat(Int(newValue * 100)) / 100)
+            }
+        }
+    }
+
+
+    /// SwifterSwift: Check if view is in RTL format.
+    public var isRightToLeft: Bool {
+        if #available(iOS 10.0, *, tvOS 10.0, *) {
+            return effectiveUserInterfaceLayoutDirection == .rightToLeft
+        } else {
+            return false
+        }
+    }
+
+    /// SwifterSwift: Take screenshot of view (if applicable).
+    public var screenshot: UIImage? {
+        UIGraphicsBeginImageContextWithOptions(layer.frame.size, false, 0)
+        defer {
+            UIGraphicsEndImageContext()
+        }
+        guard let context = UIGraphicsGetCurrentContext() else { return nil }
+        layer.render(in: context)
+        return UIGraphicsGetImageFromCurrentImageContext()
+    }
+
+    /// SwifterSwift: Shadow color of view; also inspectable from Storyboard.
+    @IBInspectable public var shadowColor: UIColor? {
+        get {
+            guard let color = layer.shadowColor else { return nil }
+            return UIColor(cgColor: color)
+        }
+        set {
+            layer.shadowColor = newValue?.cgColor
+        }
+    }
+
+    /// SwifterSwift: Shadow offset of view; also inspectable from Storyboard.
+    @IBInspectable public var shadowOffset: CGSize {
+        get {
+            return layer.shadowOffset
+        }
+        set {
+            layer.shadowOffset = newValue
+        }
+    }
+
+    /// SwifterSwift: Shadow opacity of view; also inspectable from Storyboard.
+    @IBInspectable public var shadowOpacity: Float {
+        get {
+            return layer.shadowOpacity
+        }
+        set {
+            layer.shadowOpacity = newValue
+        }
+    }
+
+    /// SwifterSwift: Shadow radius of view; also inspectable from Storyboard.
+    @IBInspectable public var shadowRadius: CGFloat {
+        get {
+            return layer.shadowRadius
+        }
+        set {
+            if UIDevice.current.userInterfaceIdiom == .phone {
+
+            layer.shadowRadius = newValue
+            }
+        }
+    }
+    @IBInspectable public var shadowRadiusIPad: CGFloat {
+        get {
+            return layer.shadowRadius
+        }
+        set {
+            if UIDevice.current.userInterfaceIdiom == .pad {
+               layer.shadowRadius = newValue
+            }
+        }
+    }
+
+    /// SwifterSwift: Get view's parent view controller
+    public var parentViewController: UIViewController? {
+        weak var parentResponder: UIResponder? = self
+        while parentResponder != nil {
+            parentResponder = parentResponder!.next
+            if let viewController = parentResponder as? UIViewController {
+                return viewController
+            }
+        }
+        return nil
+    }
+
 }

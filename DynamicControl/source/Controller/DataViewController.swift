@@ -69,7 +69,7 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
         return list?.dataList?.count ?? 0
     }
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if expandFlagArr[section] {
+        if section < expandFlagArr.count && expandFlagArr[section] {
             return 3
         } else {
             return 1
