@@ -8,6 +8,7 @@
 import UIKit
 import JGProgressHUD
 import Extensions
+import Themes
 
 class DataViewController: UIViewController {
 
@@ -23,6 +24,7 @@ class DataViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.backgroundColor = Theme.backgroundColor
         tableView.backgroundColor = .clear
         tableView.estimatedRowHeight = 100
 
