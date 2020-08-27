@@ -25,7 +25,7 @@ class DataTableViewCell: UITableViewCell {
     }
 
     func addDataView(key: String? , value: String?) {
-        let dataStackView = UIStackView(frame: CGRect(x: 0, y: 0, width : self.bounds.size.width, height : 100))
+        let dataStackView = UIStackView(frame: CGRect(x: 0, y: 0, width : self.bounds.size.width, height : 42))
         dataStackView.axis = NSLayoutConstraint.Axis.horizontal
         let keyLabel = UILabel()
         keyLabel.text = key ?? ""
@@ -39,10 +39,11 @@ class DataTableViewCell: UITableViewCell {
         dataStackView.spacing = 20
         dataStackView.distribution = .fillEqually
         self.stackView.addArrangedSubview(dataStackView)
-        
-//        let separatorLabel = UILabel(frame: CGRect(x: 0, y: 0, width : self.bounds.size.width, height : 2))
-//        separatorLabel.backgroundColor = .red
-//        self.stackView.addArrangedSubview(separatorLabel)
+        let separatorView = UIView(frame: CGRect(x: 0, y: 0, width : self.bounds.size.width, height : 10))
+        let separatorLabel = UILabel(frame: CGRect(x: 0, y: 0, width : self.bounds.size.width, height : 0.5))
+        separatorLabel.backgroundColor = .lightGray
+        separatorView.addSubview(separatorLabel)
+        self.stackView.addArrangedSubview(separatorView)
         
         self.stackView.clipsToBounds = true
     }
