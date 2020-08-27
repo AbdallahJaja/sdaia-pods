@@ -46,7 +46,7 @@ class DataViewController: UIViewController {
     
     public func reloadData() {
         progress.dismiss()
-        if list?.dataList?.count == 0 {
+        if list?.dataList == nil || list?.dataList?.count == 0 {
             setEmptyDataImage()
         } else {
             tableView.backgroundView = nil
