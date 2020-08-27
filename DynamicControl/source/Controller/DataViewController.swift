@@ -107,8 +107,8 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
                 cell.titleLbl.textColor = .co_sea
                 cell.dataLbl.isHidden = true
             }  else {
-                cell.titleLbl.text = list?.dataList?[indexPath.row].title
-                cell.dataLbl.text = list?.dataList?[indexPath.row].value
+                cell.titleLbl.text = list?.dataList?[indexPath.section].title
+                cell.dataLbl.text = list?.dataList?[indexPath.section].value
                 cell.dataLbl.textColor = .co_sea
 
                 var accessoryImage : UIImageView?
