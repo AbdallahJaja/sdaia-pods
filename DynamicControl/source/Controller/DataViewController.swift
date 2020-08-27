@@ -10,6 +10,11 @@ import JGProgressHUD
 import Extensions
 import Themes
 
+enum CellType  {
+    case title
+    case image
+    case data
+}
 class DataViewController: UIViewController {
 
     @IBOutlet weak var tableView: UITableView!
@@ -19,6 +24,7 @@ class DataViewController: UIViewController {
     public var list : InfoList?
     var expandFlagArr : [Bool] = []
     var docImg : UIImage?
+    var cells : [CellType] = []
     
     var progress = JGProgressHUD.init()
     override func viewDidLoad() {
@@ -29,7 +35,7 @@ class DataViewController: UIViewController {
         tableView.estimatedRowHeight = 100
 
         DataSourceManager.shared.currentDataVC = self
-        
+        cells = [.title , .image , .data]
         title = currentTitle
         addCloseButton()
 
@@ -75,31 +81,32 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
 
         if section < expandFlagArr.count && expandFlagArr[section] {
-            return 3
+            return cells.count
         } else {
             return 1
         }
     }
     
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-
-        if indexPath.row == 0 {
+        switch cells[indexPath.row] {
+        case .title:
             return 50
-        } else if indexPath.row == 1 {
+        case .image:
             if expandFlagArr[indexPath.section] && isImageExist(index: indexPath.section) {
-                return 120
+                return UITableView.automaticDimension
             } else {
                 return 0
             }
-        } else if indexPath.row == 2 {
+        case .data:
             return expandFlagArr[indexPath.section] ? UITableView.automaticDimension : 0
         }
-        return UITableView.automaticDimension
     }
 
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
 
-        if indexPath.row == 0 {
+        switch cells[indexPath.row] {
+            
+        case .title:
             let cell = tableView.dequeueReusableCell(withIdentifier: "DataTitleTableViewCell", for: indexPath) as! DataTitleTableViewCell
 
             if let isSingle = list?.isSingle() , isSingle == true {
@@ -123,7 +130,7 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
             cell.selectionStyle = .none
             cell.clipsToBounds = true
             return cell
-        } else if indexPath.row == 1 {
+        case .image:
             if expandFlagArr[indexPath.section] {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "ImageTableViewCell", for: indexPath) as! ImageTableViewCell
                 cell.selectionStyle = .none
@@ -134,7 +141,7 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
                 cell.clipsToBounds = true
                 return cell
             }
-        } else if indexPath.row == 2 {
+        case .data:
             if expandFlagArr[indexPath.section] {
                 let cell = tableView.dequeueReusableCell(withIdentifier: "DataTableViewCell", for: indexPath) as! DataTableViewCell
                 if let dataValues = list?.dataList?[indexPath.section].dataValues {
@@ -145,11 +152,11 @@ extension DataViewController : UITableViewDelegate , UITableViewDataSource {
                 return cell
             }
         }
-        return UITableViewCell()
+     return UITableViewCell()
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        if indexPath.row == 0 {
+        if cells[indexPath.row] == .title {
             if let isSingle = list?.isSingle() , isSingle == false {
                 expandResultDetails(index: indexPath.section)
             }
