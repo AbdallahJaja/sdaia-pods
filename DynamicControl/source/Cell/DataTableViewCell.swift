@@ -41,7 +41,8 @@ class DataTableViewCell: UITableViewCell {
         self.stackView.addArrangedSubview(dataStackView)
         let separatorView = UIView(frame: CGRect(x: 0, y: 0, width : self.bounds.size.width, height : 10))
         let separatorLabel = UILabel(frame: CGRect(x: 0, y: 0, width : self.bounds.size.width, height : 0.5))
-        separatorLabel.backgroundColor = .lightGray
+        separatorLabel.backgroundColor = .gray
+        separatorLabel.alpha = 0.5
         separatorView.addSubview(separatorLabel)
         self.stackView.addArrangedSubview(separatorView)
         
