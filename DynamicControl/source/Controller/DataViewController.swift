@@ -174,7 +174,7 @@ extension DataViewController {
         noDataImageV.clipsToBounds = true
         noDataImageV.alpha = 0.3
         noDataImageV.image = UIImage(named: "emptystate",in: DynamicControl.assetBundle, compatibleWith: nil)
-        let noDataLbl: UILabel  = UILabel(frame: CGRect(x: 0, y: tableView.bounds.size.height/2, width : tableView.bounds.size.width , height : 32))
+        let noDataLbl: UILabel  = UILabel(frame: CGRect(x: 0, y: tableView.bounds.size.height/2 + 10, width : tableView.bounds.size.width , height : 32))
         noDataLbl.alpha = 0.5
         noDataLbl.textColor = .gray
         noDataLbl.text = list?.msg
